@@ -5,29 +5,36 @@
   "main": "dist/index.js",
   "scripts": {
     "order-gen": "ts-node ./worker/orderGenerator.ts",
-
     "seed": "ts-node ./scripts/seed.ts",
-
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
-    "redis": "4.6.7",
     "cors": "2.8.5",
+    "dayjs": "^1.11.19",
     "dotenv": "16.4.5",
     "express": "4.18.2",
-    "pg": "8.12.0"
+    "express-pino-logger": "^7.0.0",
+    "helmet": "^8.1.0",
+    "pg": "8.12.0",
+    "pino": "^10.3.1",
+    "redis": "4.6.7"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
+    "@types/express-pino-logger": "^4.0.6",
+    "@types/helmet": "^0.0.48",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "20.11.17",
-    "ts-node-dev": "2.0.0",
-    "typescript": "5.3.3",
-    "eslint": "8.57.0",
+    "@types/pg": "^8.18.0",
+    "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
-    "@typescript-eslint/eslint-plugin": "6.20.0"
+    "eslint": "8.57.0",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.3.3"
   }
 }

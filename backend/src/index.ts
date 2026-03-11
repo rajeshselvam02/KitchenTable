@@ -16,8 +16,7 @@ const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-app.use(expressPino({ logger }));
-
+app.use(expressPino({ logger } as any));
 // Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
@@ -31,7 +30,7 @@ app.use('/api/orders', ordersRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 
 const PORT = process.env.PORT || 5000;
-app.use('/worker/health', require('express').Router().use(require('./routes/workerHealth')).use());
+app.use('/worker/health', workerHealthRouter);
 app.listen(PORT, () => {
   logger.info(`Backend listening on port ${PORT}`);
 });

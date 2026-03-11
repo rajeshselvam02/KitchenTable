@@ -5,3 +5,5 @@ out/
 .env.development
 .env.production
 .DS_Store
+backend/.env
+.env.local
