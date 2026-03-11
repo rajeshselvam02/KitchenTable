@@ -1,7 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { query } from '../db';
 
+import { protect } from '../middleware/auth';
 const router = Router();
+router.use(protect);
+
 
 // GET /api/analytics/summary
 router.get('/summary', async (req: Request, res: Response) => {

@@ -2,7 +2,10 @@ import { Router, Request, Response } from 'express';
 import { query } from '../db';
 import dayjs from 'dayjs';
 
+import { protect } from '../middleware/auth';
 const router = Router();
+router.use(protect);
+
 
 // GET /api/menus?start=YYYY-MM-DD&end=YYYY-MM-DD
 router.get('/', async (req: Request, res: Response) => {

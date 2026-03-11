@@ -4,12 +4,17 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
+    "order-gen": "ts-node ./worker/orderGenerator.ts",
+
+    "seed": "ts-node ./scripts/seed.ts",
+
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
+    "redis": "4.6.7",
     "cors": "2.8.5",
     "dotenv": "16.4.5",
     "express": "4.18.2",
