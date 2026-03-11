@@ -3,8 +3,10 @@ import { query } from '../db';
 import dayjs from 'dayjs';
 
 import { protect } from '../middleware/auth';
+import { requireRoles } from '../middleware/roleGuard';
 const router = Router();
 router.use(protect);
+router.use(requireRoles(['ADMIN']));
 
 
 // GET /api/menus?start=YYYY-MM-DD&end=YYYY-MM-DD

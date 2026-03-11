@@ -2,8 +2,10 @@ import { Router, Request, Response } from 'express';
 import { query } from '../db';
 
 import { protect } from '../middleware/auth';
+import { requireRoles } from '../middleware/roleGuard';
 const router = Router();
 router.use(protect);
+router.use(requireRoles(['ADMIN','STAFF']));
 
 
 // GET /api/orders - returns recent orders (limit 50)
