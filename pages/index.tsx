@@ -1,75 +1,66 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import { AnalyticsChart } from "../components/AnalyticsChart";
 import { useDark } from "../context/DarkMode";
+import { AnalyticsChart } from "../components/AnalyticsChart";
 
-type RevenuePoint = { day: string; revenue: number };
-type PrepPoint    = { day: string; avgPrepSecs: number };
-type WastePoint   = { day: string; wasteCost: number };
-type Summary = { revenue: RevenuePoint[]; prepTime: PrepPoint[]; waste: WastePoint[] };
+const RED = "#A42A04";
+const RED_SOFT = "rgba(164,42,4,0.1)";
+
+type Summary = { revenue: any[]; prepTime: any[]; waste: any[] };
 
 export default function Dashboard() {
   const { dark } = useDark();
-  const card = dark ? "#111827" : "white";
-  const text = dark ? "#f9fafb" : "#111827";
-  const sub  = dark ? "#9ca3af" : "#6b7280";
-  const bdr  = dark ? "#1f2937" : "#e9ecef";
+  const card   = dark ? "#13151a" : "#ffffff";
+  const text   = dark ? "#e8eaed" : "#1a1c21";
+  const sub    = dark ? "#7a7f8e" : "#6b7280";
+  const bdr    = dark ? "#1e2028" : "#e4e6ea";
+  const rowBg  = dark ? "#1a1c23" : "#f4f5f7";
 
-  const { data, isLoading } = useQuery<Summary>("analyticsSummary", async () => {
-    const res = await axios.get("/api/analytics/summary");
-    return res.data;
-  });
-
-  const { data: ordersData } = useQuery("orderStats", async () => {
-    const res = await axios.get("/api/orders");
-    return res.data as any[];
-  });
-
-  const { data: customersData } = useQuery("customerStats", async () => {
-    const res = await axios.get("/api/customers");
-    return res.data as any[];
-  });
+  const { data, isLoading } = useQuery<Summary>("analyticsSummary", async () => (await axios.get("/api/analytics/summary")).data);
+  const { data: orders }    = useQuery("orderStats",   async () => (await axios.get("/api/orders")).data as any[]);
+  const { data: customers } = useQuery("customerStats",async () => (await axios.get("/api/customers")).data as any[]);
 
   const totalRevenue   = data?.revenue.reduce((s, r) => s + Number(r.revenue), 0) || 0;
-  const totalOrders    = ordersData?.length || 0;
-  const totalCustomers = customersData?.length || 0;
-  const pendingOrders  = ordersData?.filter((o: any) => o.status === "pending").length || 0;
+  const totalOrders    = orders?.length || 0;
+  const totalCustomers = customers?.length || 0;
+  const pendingOrders  = orders?.filter((o: any) => o.status === "pending").length || 0;
 
   const stats = [
-    { label: "Total Revenue",  value: `₹${totalRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`, icon: "bi-currency-rupee", color: "#10b981", bg: "rgba(16,185,129,0.1)",  change: "+12.5%", up: true  },
-    { label: "Total Orders",   value: totalOrders,    icon: "bi-box-seam",        color: "#fd7e14", bg: "rgba(253,126,20,0.1)",  change: "+8.2%",  up: true  },
-    { label: "Customers",      value: totalCustomers, icon: "bi-people-fill",     color: "#3b82f6", bg: "rgba(59,130,246,0.1)",  change: "+3.1%",  up: true  },
-    { label: "Pending Orders", value: pendingOrders,  icon: "bi-hourglass-split", color: "#f59e0b", bg: "rgba(245,158,11,0.1)",  change: "-2 today", up: false },
+    { label: "Total Revenue",  value: "Rs." + totalRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 }), icon: "bi-currency-rupee", change: "+12.5%", up: true,  color: "#10b981" },
+    { label: "Total Orders",   value: totalOrders,    icon: "bi-list-check",      change: "+8.2%",  up: true,  color: RED },
+    { label: "Customers",      value: totalCustomers, icon: "bi-people",          change: "+3.1%",  up: true,  color: "#3b82f6" },
+    { label: "Pending Orders", value: pendingOrders,  icon: "bi-hourglass-split", change: "-2 today", up: false, color: "#f59e0b" },
   ];
 
   if (isLoading) return (
-    <div className="text-center py-5">
-      <div className="spinner-border text-warning" role="status" />
-      <p className="mt-2" style={{ color: sub }}>Loading dashboard...</p>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "200px", gap: "10px" }}>
+      <div className="spinner-border spinner-border-sm" style={{ color: RED }} role="status" />
+      <span style={{ color: sub, fontSize: "13px" }}>Loading dashboard...</span>
     </div>
   );
 
-  const revSeries   = data!.revenue.map(r  => ({ day: r.day, value: Number(r.revenue) }));
-  const prepSeries  = data!.prepTime.map(p => ({ day: p.day, value: Number(p.avgPrepSecs) }));
-  const wasteSeries = data!.waste.map(w    => ({ day: w.day, value: Number(w.wasteCost) }));
+  const revSeries   = data!.revenue.map(r  => ({ day: r.day,  value: Number(r.revenue) }));
+  const prepSeries  = data!.prepTime.map(p => ({ day: p.day,  value: Number(p.avgPrepSecs) }));
+  const wasteSeries = data!.waste.map(w    => ({ day: w.day,  value: Number(w.wasteCost) }));
 
   return (
     <div>
+      {/* Stat cards */}
       <div className="row g-3 mb-4">
-        {stats.map((s) => (
-          <div className="col-6 col-lg-3" key={s.label}>
-            <div style={{ background: card, borderRadius: "16px", padding: "16px", border: `1px solid ${bdr}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.3)" : "0 2px 12px rgba(0,0,0,0.06)", transition: "all 0.3s" }}>
+        {stats.map(s => (
+          <div className="col-6 col-xl-3" key={s.label}>
+            <div style={{ background: card, borderRadius: "8px", padding: "16px", border: `1px solid ${bdr}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <div style={{ fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px" }}>{s.label}</div>
-                  <div style={{ fontSize: "22px", fontWeight: 800, color: text, lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: "10px", color: sub, textTransform: "uppercase", letterSpacing: "1.2px", fontWeight: 600, marginBottom: "8px" }}>{s.label}</div>
+                  <div style={{ fontSize: "22px", fontWeight: 700, color: text, letterSpacing: "-0.5px", lineHeight: 1 }}>{s.value}</div>
                   <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "4px" }}>
-                    <i className={`bi ${s.up ? "bi-arrow-up-right" : "bi-arrow-down-right"}`} style={{ fontSize: "11px", color: s.up ? "#10b981" : "#ef4444" }}></i>
+                    <i className={"bi " + (s.up ? "bi-arrow-up-right" : "bi-arrow-down-right")} style={{ fontSize: "10px", color: s.up ? "#10b981" : "#ef4444" }}></i>
                     <span style={{ fontSize: "11px", color: s.up ? "#10b981" : "#ef4444", fontWeight: 600 }}>{s.change}</span>
                   </div>
                 </div>
-                <div style={{ width: "42px", height: "42px", borderRadius: "12px", background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <i className={`bi ${s.icon}`} style={{ fontSize: "20px", color: s.color }}></i>
+                <div style={{ width: "36px", height: "36px", borderRadius: "6px", background: s.color + "18", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <i className={"bi " + s.icon} style={{ fontSize: "16px", color: s.color }}></i>
                 </div>
               </div>
             </div>
@@ -77,23 +68,27 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Charts */}
       <div className="row g-3">
         <div className="col-12">
-          <div style={{ background: card, borderRadius: "16px", padding: "20px", border: `1px solid ${bdr}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.3)" : "0 2px 12px rgba(0,0,0,0.06)" }}>
-            <h6 style={{ color: text, fontWeight: 700, marginBottom: "16px" }}>📈 Revenue (last 30 days)</h6>
-            <AnalyticsChart series={revSeries} title="" yLabel="USD" color="#10b981" />
+          <div style={{ background: card, borderRadius: "8px", padding: "18px", border: `1px solid ${bdr}` }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "4px" }}>Revenue</div>
+            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Last 30 days</div>
+            <AnalyticsChart series={revSeries} title="" yLabel="INR" color="#10b981" />
           </div>
         </div>
         <div className="col-12 col-md-6">
-          <div style={{ background: card, borderRadius: "16px", padding: "20px", border: `1px solid ${bdr}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.3)" : "0 2px 12px rgba(0,0,0,0.06)" }}>
-            <h6 style={{ color: text, fontWeight: 700, marginBottom: "16px" }}>⏱️ Average Prep Time</h6>
-            <AnalyticsChart series={prepSeries} title="" yLabel="seconds" color="#f59e0b" />
+          <div style={{ background: card, borderRadius: "8px", padding: "18px", border: `1px solid ${bdr}` }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "4px" }}>Avg Prep Time</div>
+            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Seconds per order</div>
+            <AnalyticsChart series={prepSeries} title="" yLabel="sec" color={RED} />
           </div>
         </div>
         <div className="col-12 col-md-6">
-          <div style={{ background: card, borderRadius: "16px", padding: "20px", border: `1px solid ${bdr}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.3)" : "0 2px 12px rgba(0,0,0,0.06)" }}>
-            <h6 style={{ color: text, fontWeight: 700, marginBottom: "16px" }}>🗑️ Food Waste Cost</h6>
-            <AnalyticsChart series={wasteSeries} title="" yLabel="USD" color="#ef4444" />
+          <div style={{ background: card, borderRadius: "8px", padding: "18px", border: `1px solid ${bdr}` }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "4px" }}>Food Waste Cost</div>
+            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Daily waste in INR</div>
+            <AnalyticsChart series={wasteSeries} title="" yLabel="INR" color="#f59e0b" />
           </div>
         </div>
       </div>

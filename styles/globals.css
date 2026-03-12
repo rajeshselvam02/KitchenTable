@@ -1,0 +1,22 @@
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 576px) {
+  .card-body { padding: 12px !important; }
+  h2, h3 { font-size: 1.2rem !important; }
+  .btn { font-size: 13px; }
+}
+
+.offcanvas-start { border-right: none !important; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 4px; }

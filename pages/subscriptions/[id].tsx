@@ -3,31 +3,23 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { useDark } from "../../context/DarkMode";
 
-interface Subscription {
-  id: string; plan_type: string; meal_type: string;
-  start_date: string; end_date: string; status: string; auto_renew: boolean;
-}
+const RED = "#A42A04";
+interface Sub { id: string; plan_type: string; meal_type: string; start_date: string; end_date: string; status: string; auto_renew: boolean; }
 
 export default function SubscriptionDetail() {
   const router = useRouter();
   const { id } = router.query as { id: string };
   const { dark } = useDark();
-  const card = dark ? "#111827" : "white";
-  const text = dark ? "#f9fafb" : "#111827";
-  const sub  = dark ? "#9ca3af" : "#6b7280";
-  const bdr  = dark ? "#1f2937" : "#e9ecef";
+  const card = dark ? "#13151a" : "#ffffff";
+  const text = dark ? "#e8eaed" : "#1a1c21";
+  const sub  = dark ? "#7a7f8e" : "#6b7280";
+  const bdr  = dark ? "#1e2028" : "#e4e6ea";
 
-  const { data, isLoading, error } = useQuery(
-    ["subscription", id],
-    async () => { const res = await axios.get("/api/subscriptions/" + id); return res.data.data as Subscription; },
-    { enabled: !!id }
-  );
+  const { data, isLoading } = useQuery(["sub", id], async () => (await axios.get("/api/subscriptions/" + id)).data.data as Sub, { enabled: !!id });
 
-  if (isLoading) return <div className="text-center py-5"><div className="spinner-border text-warning" /></div>;
-  if (error) return <div className="alert alert-danger">Failed to load subscription.</div>;
+  if (isLoading) return <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "40px" }}><div className="spinner-border spinner-border-sm" style={{ color: RED }} /></div>;
 
-  const statusColor: Record<string, string> = { active: "success", inactive: "secondary", cancelled: "danger", pending: "warning" };
-
+  const statusColor: Record<string, string> = { active: "#10b981", inactive: "#6b7280", cancelled: "#ef4444", pending: "#f59e0b" };
   const fields = [
     { label: "Plan Type",  value: data?.plan_type,               icon: "bi-star" },
     { label: "Meal Type",  value: data?.meal_type,               icon: "bi-egg-fried" },
@@ -39,20 +31,24 @@ export default function SubscriptionDetail() {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 style={{ color: text, fontWeight: 800, margin: 0 }}>Subscription #{data?.id}</h2>
-        <span className={"badge bg-" + (statusColor[data?.status || ""] || "secondary") + " fs-6"}>{data?.status}</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+        <div>
+          <div style={{ fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "1.2px", fontWeight: 600, marginBottom: "4px" }}>Subscription</div>
+          <div style={{ fontSize: "22px", fontWeight: 700, color: text }}>#{data?.id}</div>
+        </div>
+        <span style={{ fontSize: "11px", fontWeight: 700, padding: "4px 10px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "1px", color: statusColor[data?.status || ""] || "#6b7280", background: (statusColor[data?.status || ""] || "#6b7280") + "18", border: "1px solid " + ((statusColor[data?.status || ""] || "#6b7280") + "30") }}>{data?.status}</span>
       </div>
+
       <div className="row g-3">
-        {fields.map((item) => (
+        {fields.map(item => (
           <div className="col-12 col-sm-6 col-lg-4" key={item.label}>
-            <div style={{ background: card, borderRadius: "14px", padding: "16px", border: "1px solid " + bdr, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.3)" : "0 2px 8px rgba(0,0,0,0.05)", display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(253,126,20,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <i className={"bi " + item.icon} style={{ color: "#fd7e14", fontSize: "18px" }}></i>
+            <div style={{ background: card, borderRadius: "8px", padding: "16px", border: `1px solid ${bdr}`, display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ width: "36px", height: "36px", borderRadius: "6px", background: RED + "18", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <i className={"bi " + item.icon} style={{ color: RED, fontSize: "15px" }}></i>
               </div>
               <div>
-                <div style={{ fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "1px" }}>{item.label}</div>
-                <div style={{ fontSize: "15px", fontWeight: 600, color: text }}>{item.value || "—"}</div>
+                <div style={{ fontSize: "10px", color: sub, textTransform: "uppercase", letterSpacing: "1.2px", fontWeight: 600 }}>{item.label}</div>
+                <div style={{ fontSize: "14px", fontWeight: 600, color: text, marginTop: "2px" }}>{item.value || "—"}</div>
               </div>
             </div>
           </div>

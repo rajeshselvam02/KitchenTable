@@ -1,15 +1,19 @@
-import { Box, Heading } from '@chakra-ui/react';
-import { MenuCalendar } from '../components/MenuCalendar';
-import dayjs from 'dayjs';
-import { startOfWeek } from 'date-fns';
+import { MenuCalendar } from "../components/MenuCalendar";
+import { useDark } from "../context/DarkMode";
+import { startOfWeek } from "date-fns";
 
 export default function MenusPage() {
-  const today = new Date();
-  const monday = startOfWeek(today, { weekStartsOn: 1 }); // Monday as start
+  const { dark } = useDark();
+  const text = dark ? "#e8eaed" : "#1a1c21";
+  const sub  = dark ? "#7a7f8e" : "#6b7280";
+  const monday = startOfWeek(new Date(), { weekStartsOn: 1 });
   return (
-    <Box p={4}>
-      <Heading mb={4}>Weekly Menu Builder</Heading>
+    <div>
+      <div style={{ marginBottom: "18px" }}>
+        <div style={{ fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "1.2px", fontWeight: 600, marginBottom: "4px" }}>Week of {monday.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
+        <div style={{ fontSize: "22px", fontWeight: 700, color: text }}>Weekly Menu Builder</div>
+      </div>
       <MenuCalendar startDate={monday} days={7} />
-    </Box>
+    </div>
   );
 }
