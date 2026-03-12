@@ -9,6 +9,7 @@ import menusRouter from './routes/menus';
 import ordersRouter from './routes/orders';
 import subscriptionsRouter from './routes/subscriptions';
 import workerHealthRouter from './routes/workerHealth';
+import customersRouter from './routes/customers';
 
 const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
@@ -28,6 +29,7 @@ app.use('/api/dishes', dishesRouter);
 app.use('/api/menus', menusRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
+app.use('/api/customers', customersRouter);
 
 const PORT = process.env.PORT || 5000;
 app.use('/worker/health', workerHealthRouter);
