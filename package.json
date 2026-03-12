@@ -12,10 +12,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.2.4",
-    "@chakra-ui/react": "2.8.2",
-    "@emotion/react": "11.11.1",
-    "@emotion/styled": "11.11.0",
     "@tanstack/react-query": "^5.90.21",
     "axios": "^1.13.6",
     "bcryptjs": "2.4.3",
