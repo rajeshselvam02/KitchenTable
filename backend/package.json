@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "order-gen": "ts-node ./worker/orderGenerator.ts",
+    "migrate": "ts-node ./scripts/migrate.ts",
     "seed": "ts-node ./scripts/seed.ts",
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
