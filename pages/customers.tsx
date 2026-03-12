@@ -14,7 +14,9 @@ export default function Customers() {
   const hdr   = dark ? "#0e1015" : "#f4f5f7";
   const hover = dark ? "#1a1c23" : "#f9fafb";
 
-  const { data, isLoading, isError } = useQuery<Customer[]>("customers", async () => (await axios.get("/api/customers")).data);
+  const { data, isLoading, isError } = useQuery<Customer[]>({
+  queryKey: ["customers"],
+  queryFn: () => axios.get("/api/customers").then(r => r.data.data),});
 
   return (
     <div>

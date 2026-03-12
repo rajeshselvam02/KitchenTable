@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import pool from '../src/db';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -25,10 +26,7 @@ async function run() {
       { name: 'Beef Burrito', category: 'burrito', cost: 6.2 },
     ];
     for (const d of dishes) {
-      await pool.query(
-        `INSERT INTO dishes (name, category, cost_per_serving) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING`,
-        [d.name, d.category, d.cost]
-      );
+     await pool.query(`INSERT INTO users (email, password_hash, role) VALUES ($1, $2, 'ADMIN') ON CONFLICT (email) DO NOTHING`, ['admin@example.com', passwordHash]);
     }
     console.log('✅ Sample dishes inserted');
 
@@ -46,6 +44,45 @@ async function run() {
     console.log('✅ Sample menu entries for next 7 days');
 
     // --- Orders placeholder – none needed now
+  // Seed customers
+  const customerIds: number[] = [];
+  const customerData = [
+    ['Priya Sharma', 'priya@example.com', '9876543210', '12 MG Road, Bangalore'],
+    ['Rahul Verma', 'rahul@example.com', '9876543211', '45 Anna Salai, Chennai'],
+    ['Anita Patel', 'anita@example.com', '9876543212', '78 FC Road, Pune'],
+    ['Vikram Singh', 'vikram@example.com', '9876543213', '23 Park Street, Kolkata'],
+    ['Meena Nair', 'meena@example.com', '9876543214', '56 Brigade Road, Bangalore'],
+  ];
+  for (const [name, email, phone, address] of customerData) {
+    const r = await pool.query(
+      `INSERT INTO customers (name, email, phone, address)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+       RETURNING id`,
+      [name, email, phone, address]
+    );
+    customerIds.push(r.rows[0].id);
+  }
+  console.log('✅ Sample customers inserted');
+
+  // Seed orders for last 30 days
+  const dishRes = await pool.query('SELECT id, cost_per_serving FROM dishes');
+  const dishes2 = dishRes.rows;
+  for (let i = 29; i >= 0; i--) {
+    const day = dayjs().subtract(i, 'day').format('YYYY-MM-DD');
+    for (let j = 0; j < 3; j++) {
+      const cust = customerIds[j % customerIds.length];
+      const dish = dishes2[j % dishes2.length];
+      const qty  = Math.ceil(Math.random() * 3);
+      const status = i === 0 ? 'pending' : 'delivered';
+      await pool.query(
+        `INSERT INTO orders (customer_id, dish_id, quantity, total_price, status, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6::date)`,
+        [cust, dish.id, qty, dish.cost_per_serving * qty, status, day]
+      );
+    }
+  }
+  console.log('✅ Sample orders inserted');
     process.exit(0);
   } catch (err) {
     console.error('Seed error', err);

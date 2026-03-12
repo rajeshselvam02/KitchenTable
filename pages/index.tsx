@@ -49,9 +49,9 @@ export default function Dashboard() {
     </div>
   );
 
-  const revSeries   = data!.revenue.map(r  => ({ day: r.day,  value: Number(r.revenue) }));
-  const prepSeries  = data!.prepTime.map(p => ({ day: p.day,  value: Number(p.avgPrepSecs) }));
-  const wasteSeries = data!.waste.map(w    => ({ day: w.day,  value: Number(w.wasteCost) }));
+const revSeries   = data?.revenue.map(r  => ({ day: r.day, value: Number(r.revenue) }))   ?? [];
+const prepSeries  = data?.prepTime.map(p => ({ day: p.day, value: Number(p.avgPrepSecs) })) ?? [];
+const wasteSeries = data?.waste.map(w    => ({ day: w.day, value: Number(w.wasteCost) }))  ?? [];
 
   return (
     <div>

@@ -1,15 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { query } from '../db';
-
 import { protect } from '../middleware/auth';
 import { requireRoles } from '../middleware/roleGuard';
+
 const router = Router();
-router.use(requireRoles(['ADMIN','STAFF']));):
+router.use(protect);
+router.use(requireRoles(['ADMIN', 'STAFF']));
+
 const VALID_STATUSES = ['pending', 'preparing', 'ready', 'delivered'] as const;
 type OrderStatus = typeof VALID_STATUSES[number];
-router.use(protect);
-router.use(requireRoles(['ADMIN','STAFF']));
-
 
 // GET /api/orders - returns recent orders (limit 50)
 router.get('/', async (_req: Request, res: Response) => {
@@ -35,14 +34,17 @@ router.get('/', async (_req: Request, res: Response) => {
 router.patch('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { status } = req.body as { status?: string };
+
   if (!status) {
     return res.status(400).json({ error: 'status is required' });
   }
+
   if (!VALID_STATUSES.includes(status as OrderStatus)) {
     return res.status(400).json({
       error: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
     });
   }
+
   try {
     await query(`UPDATE orders SET status = $1 WHERE id = $2`, [status, id]);
     res.json({ id, status });
