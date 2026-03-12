@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'kitchen-table-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-secret-change-in-production';
 
 async function run() {
   try {

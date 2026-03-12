@@ -35,5 +35,5 @@ export default NextAuth({
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || 'kitchen-table-secret',
+  secret: process.env.NEXTAUTH_SECRET || 'dev-only-secret-change-in-production',
 });
