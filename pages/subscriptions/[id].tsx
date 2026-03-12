@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useDark } from "../../context/DarkMode";
 
@@ -15,8 +15,11 @@ export default function SubscriptionDetail() {
   const sub  = dark ? "#7a7f8e" : "#6b7280";
   const bdr  = dark ? "#1e2028" : "#e4e6ea";
 
-  const { data, isLoading } = useQuery(["sub", id], async () => (await axios.get("/api/subscriptions/" + id)).data.data as Sub, { enabled: !!id });
-
+  const { data, isLoading } = useQuery<Sub>({
+  queryKey: ["sub", id],
+  queryFn: () => axios.get("/api/subscriptions/" + id).then(r => r.data.data),
+  enabled: !!id,
+});
   if (isLoading) return <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "40px" }}><div className="spinner-border spinner-border-sm" style={{ color: RED }} /></div>;
 
   const statusColor: Record<string, string> = { active: "#10b981", inactive: "#6b7280", cancelled: "#ef4444", pending: "#f59e0b" };

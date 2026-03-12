@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useDark } from "../context/DarkMode";
 import { AnalyticsChart } from "../components/AnalyticsChart";
@@ -16,9 +16,18 @@ export default function Dashboard() {
   const bdr    = dark ? "#1e2028" : "#e4e6ea";
   const rowBg  = dark ? "#1a1c23" : "#f4f5f7";
 
-  const { data, isLoading } = useQuery<Summary>("analyticsSummary", async () => (await axios.get("/api/analytics/summary")).data);
-  const { data: orders }    = useQuery("orderStats",   async () => (await axios.get("/api/orders")).data as any[]);
-  const { data: customers } = useQuery("customerStats",async () => (await axios.get("/api/customers")).data as any[]);
+  const { data, isLoading } = useQuery<Summary>({
+  queryKey: ["analyticsSummary"],
+  queryFn: () => axios.get("/api/analytics/summary").then(r => r.data),
+  });
+  const { data: orders } = useQuery<any[]>({
+  queryKey: ["orderStats"],
+  queryFn: () => axios.get("/api/orders").then(r => r.data),
+  });
+  const { data: customers } = useQuery<any[]>({
+  queryKey: ["customerStats"],
+  queryFn: () => axios.get("/api/customers").then(r => r.data),
+  });
 
   const totalRevenue   = data?.revenue.reduce((s, r) => s + Number(r.revenue), 0) || 0;
   const totalOrders    = orders?.length || 0;
