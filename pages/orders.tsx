@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useDark } from "../context/DarkMode";
 
@@ -29,6 +29,30 @@ export default function OrdersPage() {
   useEffect(() => {
     axios.get("/api/orders").then(r => { setOrders(r.data); setLoading(false); });
   }, []);
+  
+  const [liveConnected, setLiveConnected] = useState(false);
+const esRef = useRef<EventSource | null>(null);
+
+useEffect(() => {
+  const es = new EventSource("/api/orders/stream");
+  esRef.current = es;
+
+  es.onopen = () => setLiveConnected(true);
+  es.onerror = () => setLiveConnected(false);
+
+  es.onmessage = (event) => {
+    try {
+      const newOrder = JSON.parse(event.data);
+      setOrders(prev => {
+        const exists = prev.find(o => o.id === newOrder.id);
+        if (exists) return prev.map(o => o.id === newOrder.id ? { ...o, ...newOrder } : o);
+        return [newOrder, ...prev];
+      });
+    } catch { /* ignore malformed events */ }
+  };
+
+  return () => { es.close(); setLiveConnected(false); };
+}, []);
 
   const update = async (id: number, next: string) => {
     await axios.patch("/api/orders/" + id, { status: next });
@@ -69,7 +93,20 @@ export default function OrdersPage() {
       <div style={{ background: card, borderRadius: "8px", border: `1px solid ${bdr}` }}>
         {/* Table toolbar */}
         <div style={{ padding: "14px 16px", borderBottom: `1px solid ${bdr}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
-          <span style={{ fontSize: "13px", fontWeight: 600, color: text }}>Order Queue</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+  <span style={{ fontSize: "13px", fontWeight: 600, color: text }}>Order Queue</span>
+  <span style={{
+    display: "flex", alignItems: "center", gap: "4px",
+    fontSize: "10px", fontWeight: 600, padding: "2px 7px", borderRadius: "4px",
+    background: liveConnected ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
+    color: liveConnected ? "#22c55e" : "#ef4444",
+    border: `1px solid ${liveConnected ? "rgba(34,197,94,0.2)" : "rgba(239,68,68,0.2)"}`,
+  }}>
+    <span style={{ width: "5px", height: "5px", borderRadius: "50%",
+      background: liveConnected ? "#22c55e" : "#ef4444", display: "inline-block" }} />
+    {liveConnected ? "LIVE" : "OFFLINE"}
+  </span>
+</div>  
           <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
             {["all", "pending", "preparing", "ready", "delivered"].map(f => (
               <button key={f} onClick={() => setFilter(f)} style={{

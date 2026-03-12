@@ -10,11 +10,15 @@ import ordersRouter from './routes/orders';
 import subscriptionsRouter from './routes/subscriptions';
 import workerHealthRouter from './routes/workerHealth';
 import customersRouter from './routes/customers';
+import orderStreamRouter from './routes/orderStream';
 
 const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
-app.use(cors());
+const allowedOrigins = process.env.FRONTEND_URL
+  ? [process.env.FRONTEND_URL]
+  : ['http://localhost:3000'];
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(helmet());
 app.use(express.json());
 app.use(expressPino({ logger } as any));
@@ -27,6 +31,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/dishes', dishesRouter);
 app.use('/api/menus', menusRouter);
+app.use('/api/orders/stream', orderStreamRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/customers', customersRouter);
