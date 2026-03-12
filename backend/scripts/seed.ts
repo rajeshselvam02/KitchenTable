@@ -14,7 +14,7 @@ async function run() {
     await pool.query(`INSERT INTO users (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING`, ['admin@example.com', passwordHash]);
     const userRes = await pool.query(`SELECT id FROM users WHERE email = $1`, ['admin@example.com']);
     const userId = userRes.rows[0].id;
-    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId, role: 'ADMIN' }, JWT_SECRET, { expiresIn: '7d' });
     console.log('🔑 Sample JWT (use in Authorization header):');
     console.log('Bearer ' + token);
 
