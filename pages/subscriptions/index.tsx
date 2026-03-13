@@ -28,12 +28,15 @@ export default function SubscriptionsPage() {
   const text = dark ? "#e8eaed" : "#1a1c21";
   const sub  = dark ? "#7a7f8e" : "#6b7280";
   const bdr  = dark ? "#1e2028" : "#e4e6ea";
-  const hover= dark ? "#1a1c23" : "#f9fafb";
+  const bg   = dark ? "#0d0f14" : "#f8f9fb";
+  const hover = dark ? "#1a1d26" : "#f0f2f5";
 
-  const { data: stats } = useQuery<Stats>({
-    queryKey: ["sub-stats"],
-    queryFn: () => axios.get("/api/subscriptions/stats").then(r => r.data),
-  });
+  const planColor: Record<string, string> = {
+    starter: "#f59e0b", weekly: "#3b82f6", monthly: "#10b981", custom: "#8b5cf6"
+  };
+  const statusColor: Record<string, string> = {
+    active: "#10b981", inactive: "#f59e0b", cancelled: "#ef4444", paused: "#6b7280"
+  };
 
   const { data, isLoading, isError } = useQuery<{ data: Sub[]; pagination: any }>({
     queryKey: ["subscriptions", planFilter, statusFilter],
@@ -42,21 +45,19 @@ export default function SubscriptionsPage() {
     }).then(r => r.data),
   });
 
-  const planColor: Record<string, string> = {
-    starter: "#f59e0b", weekly: "#3b82f6", monthly: "#10b981"
-  };
-  const statusColor: Record<string, string> = {
-    active: "#10b981", inactive: "#6b7280", cancelled: "#ef4444", pending: "#f59e0b"
-  };
+  const { data: stats } = useQuery<Stats>({
+    queryKey: ["subscriptionStats"],
+    queryFn: () => axios.get("/api/subscriptions/stats").then(r => r.data),
+  });
 
   const statCards = [
-    { label: "Active", value: stats?.active || "0", color: "#10b981" },
-    { label: "New Today", value: stats?.new_today || "0", color: RED },
-    { label: "This Week", value: stats?.new_this_week || "0", color: "#3b82f6" },
-    { label: "This Month", value: stats?.new_this_month || "0", color: "#8b5cf6" },
-    { label: "Starter", value: stats?.starter || "0", color: "#f59e0b" },
-    { label: "Weekly", value: stats?.weekly || "0", color: "#3b82f6" },
-    { label: "Monthly", value: stats?.monthly || "0", color: "#10b981" },
+    { label: "Active",      value: stats?.active || "0",          color: "#10b981" },
+    { label: "New Today",   value: stats?.new_today || "0",       color: "#f59e0b" },
+    { label: "This Week",   value: stats?.new_this_week || "0",   color: "#3b82f6" },
+    { label: "This Month",  value: stats?.new_this_month || "0",  color: "#8b5cf6" },
+    { label: "Starter",     value: stats?.starter || "0",         color: "#f59e0b" },
+    { label: "Weekly",      value: stats?.weekly || "0",          color: "#3b82f6" },
+    { label: "Monthly",     value: stats?.monthly || "0",         color: "#10b981" },
   ];
 
   return (
@@ -77,7 +78,7 @@ export default function SubscriptionsPage() {
         ))}
       </div>
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "16px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center" }}>
         {["", "starter", "weekly", "monthly"].map(p => (
           <button key={p} onClick={() => setPlanFilter(p)}
             style={{ padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 500,
@@ -85,7 +86,6 @@ export default function SubscriptionsPage() {
             {p === "" ? "All Plans" : p.charAt(0).toUpperCase() + p.slice(1)}
           </button>
         ))}
-        <div style={{ width: "1px", background: bdr }} />
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
           style={{ padding: "7px 14px", borderRadius: "20px", border: "1px solid " + bdr, background: card,
             color: text, fontSize: "13px", fontWeight: 500, cursor: "pointer", outline: "none" }}>
@@ -99,8 +99,7 @@ export default function SubscriptionsPage() {
       <div style={{ background: card, borderRadius: "16px", border: `1px solid ${bdr}`, overflow: "hidden" }}>
         {isLoading && <div style={{ padding: "40px", textAlign: "center", color: sub }}>Loading...</div>}
         {isError && <div style={{ padding: "20px", color: "#ef4444" }}>Failed to load subscriptions.</div>}
-        {data?.data && (
-          {data.data.map((s) => (
+        {data?.data && data.data.map((s) => (
           <div key={s.id} onClick={() => router.push(`/subscriptions/${s.id}`)}
             style={{ padding: "14px 16px", borderTop: `1px solid ${bdr}`, cursor: "pointer" }}
             onMouseEnter={e => (e.currentTarget.style.background = hover)}
@@ -123,15 +122,13 @@ export default function SubscriptionsPage() {
               </span>
               <span style={{ color: sub, fontSize: "12px", textTransform: "capitalize" }}>{s.meal_type}</span>
               <span style={{ color: text, fontSize: "12px", marginLeft: "auto" }}>
-                {s.plan_price ? `₹${parseFloat(s.plan_price).toFixed(0)}` : ""}
+                {s.plan_price ? `₹${parseFloat(String(s.plan_price)).toFixed(0)}` : ""}
               </span>
             </div>
           </div>
         ))}
-        {data.data.length === 0 && (
+        {data?.data?.length === 0 && (
           <div style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</div>
-        )}
-        </div>
         )}
       </div>
     </div>
