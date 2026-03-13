@@ -100,47 +100,37 @@ export default function SubscriptionsPage() {
         {isLoading && <div style={{ padding: "40px", textAlign: "center", color: sub }}>Loading...</div>}
         {isError && <div style={{ padding: "20px", color: "#ef4444" }}>Failed to load subscriptions.</div>}
         {data?.data && (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: dark ? "#0e1015" : "#f4f5f7" }}>
-                {["#", "Customer", "Plan", "Meals", "Status"].map(h => (
-                  <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "0.8px", fontWeight: 600 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.map((s) => (
-                <tr key={s.id} onClick={() => router.push(`/subscriptions/${s.id}`)}
-                  style={{ borderTop: `1px solid ${bdr}`, cursor: "pointer" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = hover)}
-                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                  <td style={{ padding: "14px 16px", color: sub, fontSize: "13px" }}>{s.id}</td>
-                  <td style={{ padding: "14px 16px" }}>
-                    <div style={{ fontWeight: 600, color: text, fontSize: "14px" }}>{s.customer_name}</div>
-                    <div style={{ fontSize: "12px", color: sub }}>{s.whatsapp_number || s.customer_phone}</div>
-                    <div style={{ fontSize: "11px", color: sub, marginTop: "2px" }}>{s.start_date?.slice(0,10)} → {s.end_date?.slice(0,10)}</div>
-                  </td>
-                  <td style={{ padding: "14px 16px" }}>
-                    <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
-                      background: `${planColor[s.plan_type]}20`, color: planColor[s.plan_type] }}>
-                      {s.plan_type}
-                    </span>
-                  </td>
-                  <td style={{ padding: "14px 16px", color: text, fontSize: "13px", textTransform: "capitalize" }}>{s.meal_type}</td>
-                    
-                  <td style={{ padding: "14px 16px" }}>
-                    <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
-                      background: `${statusColor[s.status]}20`, color: statusColor[s.status] }}>
-                      {s.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {data.data.length === 0 && (
-                <tr><td colSpan={5} style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</td></tr>
-              )}
-            </tbody>
-          </table>
+          {data.data.map((s) => (
+          <div key={s.id} onClick={() => router.push(`/subscriptions/${s.id}`)}
+            style={{ padding: "14px 16px", borderTop: `1px solid ${bdr}`, cursor: "pointer" }}
+            onMouseEnter={e => (e.currentTarget.style.background = hover)}
+            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+              <div>
+                <div style={{ fontWeight: 600, color: text, fontSize: "15px" }}>#{s.id} {s.customer_name}</div>
+                <div style={{ fontSize: "12px", color: sub, marginTop: "2px" }}>{s.whatsapp_number || s.customer_phone}</div>
+                <div style={{ fontSize: "11px", color: sub, marginTop: "2px" }}>{s.start_date?.slice(0,10)} → {s.end_date?.slice(0,10)}</div>
+              </div>
+              <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                background: `${statusColor[s.status]}20`, color: statusColor[s.status] }}>
+                {s.status}
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                background: `${planColor[s.plan_type]}20`, color: planColor[s.plan_type] }}>
+                {s.plan_type}
+              </span>
+              <span style={{ color: sub, fontSize: "12px", textTransform: "capitalize" }}>{s.meal_type}</span>
+              <span style={{ color: text, fontSize: "12px", marginLeft: "auto" }}>
+                {s.plan_price ? `₹${parseFloat(s.plan_price).toFixed(0)}` : ""}
+              </span>
+            </div>
+          </div>
+        ))}
+        {data.data.length === 0 && (
+          <div style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</div>
+        )}
         )}
       </div>
     </div>
