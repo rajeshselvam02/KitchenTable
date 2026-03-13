@@ -118,6 +118,7 @@ export default function SubscriptionsPage() {
                   <td style={{ padding: "14px 16px" }}>
                     <div style={{ fontWeight: 600, color: text, fontSize: "14px" }}>{s.customer_name}</div>
                     <div style={{ fontSize: "12px", color: sub }}>{s.whatsapp_number || s.customer_phone}</div>
+                    <div style={{ fontSize: "11px", color: sub, marginTop: "2px" }}>{s.start_date?.slice(0,10)} → {s.end_date?.slice(0,10)}</div>
                   </td>
                   <td style={{ padding: "14px 16px" }}>
                     <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
