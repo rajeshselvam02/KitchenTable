@@ -86,10 +86,10 @@ export default function SubscriptionsPage() {
           </button>
         ))}
         <div style={{ width: "1px", background: bdr }} />
-        {["active", "inactive", "cancelled", ""].map(s => (
+        {["", "active", "inactive", "cancelled"].map(s => (
           <button key={s} onClick={() => setStatusFilter(s)}
             style={{ padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 500,
-              background: statusFilter === s ? "#1e2028" : card, color: statusFilter === s ? "#fff" : text }}>
+              background: statusFilter === s ? RED : card, color: statusFilter === s ? "#fff" : text }}>
             {s === "" ? "All Status" : s.charAt(0).toUpperCase() + s.slice(1)}
           </button>
         ))}

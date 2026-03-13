@@ -36,7 +36,7 @@ export default function SubscriptionDetail() {
 
   const { data: subscription, isLoading } = useQuery<Sub>({
     queryKey: ["subscription", id],
-    queryFn: () => axios.get("/api/subscriptions/" + id).then(r => r.data),
+    queryFn: () => axios.get("/api/subscriptions/" + id).then(r => r.data.data),
     enabled: !!id,
   });
 
@@ -82,7 +82,7 @@ export default function SubscriptionDetail() {
           <div>
             <div style={{ fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>Subscription #{subscription.id}</div>
             <div style={{ fontSize: "22px", fontWeight: 700, color: text }}>{subscription.customer_name}</div>
-            <div style={{ fontSize: "13px", color: sub, marginTop: "2px" }}>{subscription.customer_phone} · {subscription.customer_email}</div>
+            <div style={{ fontSize: "13px", color: sub, marginTop: "2px" }}>{subscription.phone} · {subscription.email}</div>
           </div>
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
             <span style={{ padding: "4px 14px", borderRadius: "20px", fontSize: "13px", fontWeight: 600, background: planColor + "20", color: planColor }}>
@@ -97,7 +97,7 @@ export default function SubscriptionDetail() {
         {/* Stats row */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginTop: "20px" }}>
           {[
-            { label: "Plan Price",  value: "₹" + subscription.plan_price, color: text },
+            { label: "Plan Price",  value: "₹" + parseFloat(subscription.plan_price).toLocaleString(), color: text },
             { label: "Days Left",   value: daysLeft + " days",            color: daysLeft < 5 ? "#ef4444" : "#10b981" },
             { label: "Delivered",   value: deliveredCount,                color: "#10b981" },
             { label: "Skipped",     value: skippedCount,                  color: skippedCount > 0 ? "#f59e0b" : sub },
