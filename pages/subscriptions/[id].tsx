@@ -95,7 +95,7 @@ export default function SubscriptionDetail() {
         </div>
 
         {/* Stats row */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginTop: "20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginTop: "20px" }}>
           {[
             { label: "Plan Price",  value: "₹" + parseFloat(subscription.plan_price).toLocaleString(), color: text },
             { label: "Days Left",   value: daysLeft + " days",            color: daysLeft < 5 ? "#ef4444" : "#10b981" },
@@ -110,7 +110,7 @@ export default function SubscriptionDetail() {
         </div>
 
         {/* Details */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "16px", fontSize: "13px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px", marginTop: "16px", fontSize: "13px" }}>
           {[
             ["Meal Type",   subscription.meal_type],
             ["Food Type",   subscription.food_type || "veg"],
@@ -119,15 +119,15 @@ export default function SubscriptionDetail() {
             ["Total Days",  totalDays + " days"],
             ["Auto Renew",  subscription.auto_renew ? "Yes" : "No"],
           ].map(([label, value]) => (
-            <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", background: bg, borderRadius: "8px" }}>
-              <span style={{ color: sub }}>{label}</span>
-              <span style={{ color: text, fontWeight: 500, textTransform: "capitalize" }}>{value}</span>
+            <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: bg, borderRadius: "8px" }}>
+              <span style={{ color: sub, fontSize: "12px", flexShrink: 0 }}>{label}</span>
+              <span style={{ color: text, fontWeight: 600, fontSize: "13px", textTransform: "capitalize", textAlign: "right" }}>{value}</span>
             </div>
           ))}
         </div>
 
         {/* Actions */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "16px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "8px", marginTop: "16px", flexDirection: "row" }}>
           {subscription.status === "active" && (
             <button onClick={() => statusMut.mutate("inactive")}
               style={{ padding: "8px 16px", borderRadius: "8px", background: "#f59e0b20", color: "#f59e0b", border: "1px solid #f59e0b50", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
