@@ -13,12 +13,14 @@ router.use(requireRoles(['ADMIN', 'STAFF']));
 router.get('/', async (req: Request, res: Response) => {
   try {
     const date = (req.query.date as string) || new Date().toISOString().slice(0, 10);
+    const subId = req.query.subscription_id ? parseInt(req.query.subscription_id as string) : null;
     const { rows } = await pool.query(`
-      SELECT 
+      SELECT
         d.id, d.delivery_date, d.meal_type, d.status,
         d.porter_order_id, d.rider_name, d.rider_phone,
+        d.skipped_at, d.skip_reason, d.customer_comment,
         d.notes, d.updated_at,
-        c.id as customer_id, c.name as customer_name, 
+        c.id as customer_id, c.name as customer_name,
         c.phone as customer_phone, c.address as customer_address,
         c.whatsapp_number, c.locality,
         c.delivery_lat, c.delivery_lng,
@@ -28,9 +30,10 @@ router.get('/', async (req: Request, res: Response) => {
       JOIN customers c ON c.id = d.customer_id
       JOIN subscriptions s ON s.id = d.subscription_id
       LEFT JOIN dishes di ON di.id = d.dish_id
-      WHERE d.delivery_date = $1
-      ORDER BY d.meal_type, c.name
-    `, [date]);
+      WHERE ($1::date IS NULL OR d.delivery_date = $1)
+        AND ($2::int IS NULL OR d.subscription_id = $2)
+      ORDER BY d.delivery_date DESC, d.meal_type, c.name
+    `, [subId ? null : date, subId]);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch deliveries' });

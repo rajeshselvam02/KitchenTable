@@ -1,4 +1,5 @@
 import express from 'express';
+import rawMaterialsRouter from './routes/rawMaterials';
 import { startScheduler } from './services/scheduler';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -36,6 +37,7 @@ app.use('/api/dishes', dishesRouter);
 app.use('/api/menus', menusRouter);
 app.use('/api/orders/stream', orderStreamRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/raw-materials', rawMaterialsRouter);
 app.use('/api/deliveries', deliveriesRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/customers', customersRouter);

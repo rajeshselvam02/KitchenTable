@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const rawMaterials_1 = __importDefault(require("./routes/rawMaterials"));
 const scheduler_1 = require("./services/scheduler");
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
@@ -38,6 +39,7 @@ app.use('/api/dishes', dishes_1.default);
 app.use('/api/menus', menus_1.default);
 app.use('/api/orders/stream', orderStream_1.default);
 app.use('/api/orders', orders_1.default);
+app.use('/api/raw-materials', rawMaterials_1.default);
 app.use('/api/deliveries', deliveries_1.default);
 app.use('/api/subscriptions', subscriptions_1.default);
 app.use('/api/customers', customers_1.default);
