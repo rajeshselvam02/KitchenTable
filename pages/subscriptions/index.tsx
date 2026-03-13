@@ -131,6 +131,7 @@ export default function SubscriptionsPage() {
         {data.data.length === 0 && (
           <div style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</div>
         )}
+        </div>
         )}
       </div>
     </div>
