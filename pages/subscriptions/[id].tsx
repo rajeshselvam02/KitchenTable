@@ -159,57 +159,35 @@ export default function SubscriptionDetail() {
           <div style={{ padding: "40px", textAlign: "center", color: sub }}>No deliveries yet</div>
         )}
         {deliveries.length > 0 && (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: bg }}>
-                {["Date", "Meal", "Dish", "Status", "Comment", "Action"].map(h => (
-                  <th key={h} style={{ padding: "10px 16px", textAlign: "left", fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "0.8px" }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {deliveries.map((d: Delivery) => {
-                const sc: Record<string, string> = {
-                  pending: "#f59e0b", preparing: "#3b82f6", ready: "#8b5cf6",
-                  out_for_delivery: "#f97316", delivered: "#10b981",
-                  skipped: "#6b7280", failed: "#ef4444", auto_confirmed: "#10b981"
-                };
-                return (
-                  <tr key={d.id} style={{ borderTop: "1px solid " + bdr }}>
-                    <td style={{ padding: "12px 16px", color: text, fontSize: "13px" }}>{d.delivery_date?.slice(0, 10)}</td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <span style={{ padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
-                        background: d.meal_type === "lunch" ? "rgba(245,158,11,0.15)" : "rgba(139,92,246,0.15)",
-                        color: d.meal_type === "lunch" ? "#f59e0b" : "#8b5cf6", textTransform: "capitalize" }}>
-                        {d.meal_type}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 16px", color: text, fontSize: "13px" }}>{d.dish_name || "—"}</td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <span style={{ padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
-                        background: (sc[d.status] || "#6b7280") + "20", color: sc[d.status] || "#6b7280", textTransform: "capitalize" }}>
-                        {d.status?.replace(/_/g, " ")}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 16px", color: sub, fontSize: "12px", maxWidth: "150px" }}>
-                      {d.customer_comment || d.skip_reason || "—"}
-                    </td>
-                    <td style={{ padding: "12px 16px" }}>
-                      {["pending", "auto_confirmed"].includes(d.status) && (
-                        <button onClick={() => {
-                          const comment = prompt("Skip reason:") || "";
-                          skipMut.mutate({ did: d.id, comment });
-                        }}
-                        style={{ padding: "4px 10px", borderRadius: "6px", background: "#ef444420", color: "#ef4444", border: "none", cursor: "pointer", fontSize: "12px" }}>
-                          Skip
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {deliveries.map((d: Delivery) => {
+              const sc: Record<string, string> = {
+                pending: "#f59e0b", preparing: "#3b82f6", ready: "#8b5cf6",
+                out_for_delivery: "#f97316", delivered: "#10b981",
+                skipped: "#6b7280", failed: "#ef4444", auto_confirmed: "#10b981"
+              };
+              return (
+                <div key={d.id} style={{ padding: "12px 16px", borderRadius: "10px", background: bg, border: "1px solid " + bdr }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                    <span style={{ color: sub, fontSize: "12px" }}>{d.delivery_date?.slice(0, 10)}</span>
+                    <span style={{ padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
+                      background: sc[d.status] + "20", color: sc[d.status], textTransform: "capitalize" }}>
+                      {d.status}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
+                      background: d.meal_type === "lunch" ? "rgba(245,158,11,0.15)" : "rgba(139,92,246,0.15)",
+                      color: d.meal_type === "lunch" ? "#f59e0b" : "#8b5cf6", textTransform: "capitalize" }}>
+                      {d.meal_type}
+                    </span>
+                    <span style={{ color: text, fontSize: "13px", fontWeight: 500 }}>{d.dish_name || "—"}</span>
+                  </div>
+                  {d.customer_comment && <div style={{ color: sub, fontSize: "12px", marginTop: "6px" }}>{d.customer_comment}</div>}
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
