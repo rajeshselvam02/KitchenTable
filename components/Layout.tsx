@@ -11,9 +11,10 @@ const NAV = [
   { label: "Dashboard",     href: "/",               icon: "bi-grid-1x2" },
   { label: "Analytics",     href: "/analytics",      icon: "bi-bar-chart-line" },
   { label: "Orders",        href: "/orders",         icon: "bi-list-check",   badge: "Live" },
+  { label: "Deliveries",    href: "/deliveries",     icon: "bi-truck" },
   { label: "Menus",         href: "/menus",          icon: "bi-calendar-week" },
   { label: "Customers",     href: "/customers",      icon: "bi-people" },
-  { label: "Subscriptions", href: "/subscriptions/1",icon: "bi-arrow-repeat" },
+  { label: "Subscriptions", href: "/subscriptions",icon: "bi-arrow-repeat" },
 ];
 
 const TITLES: Record<string, { title: string; sub: string }> = {
@@ -22,7 +23,8 @@ const TITLES: Record<string, { title: string; sub: string }> = {
   "/orders":          { title: "Orders",        sub: "Live order management queue" },
   "/menus":           { title: "Menus",         sub: "Weekly meal planning calendar" },
   "/customers":       { title: "Customers",     sub: "Subscriber database" },
-  "/subscriptions/1": { title: "Subscriptions", sub: "Subscription plan details" },
+  "/deliveries":      { title: "Deliveries",    sub: "Daily delivery management" },
+  "/subscriptions": { title: "Subscriptions", sub: "All subscription plans" },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

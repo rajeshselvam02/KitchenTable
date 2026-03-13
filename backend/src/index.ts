@@ -1,4 +1,5 @@
 import express from 'express';
+import { startScheduler } from './services/scheduler';
 import cors from 'cors';
 import helmet from 'helmet';
 import pino from 'pino';
@@ -11,6 +12,8 @@ import subscriptionsRouter from './routes/subscriptions';
 import workerHealthRouter from './routes/workerHealth';
 import customersRouter from './routes/customers';
 import orderStreamRouter from './routes/orderStream';
+import whatsappRouter from './routes/whatsapp';
+import deliveriesRouter from './routes/deliveries';
 
 const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
@@ -33,11 +36,14 @@ app.use('/api/dishes', dishesRouter);
 app.use('/api/menus', menusRouter);
 app.use('/api/orders/stream', orderStreamRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/deliveries', deliveriesRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/customers', customersRouter);
+app.use('/api/whatsapp', whatsappRouter);
 
 const PORT = process.env.PORT || 5000;
 app.use('/worker/health', workerHealthRouter);
+startScheduler();
 app.listen(PORT, () => {
   logger.info(`Backend listening on port ${PORT}`);
 });

@@ -26,7 +26,12 @@ async function run() {
       { name: 'Beef Burrito', category: 'burrito', cost: 6.2 },
     ];
     for (const d of dishes) {
-     await pool.query(`INSERT INTO users (email, password_hash, role) VALUES ($1, $2, 'ADMIN') ON CONFLICT (email) DO NOTHING`, ['admin@example.com', passwordHash]);
+     for (const d of dishes) {
+      await pool.query(
+        `INSERT INTO dishes (name, category, cost_per_serving) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`,
+        [d.name, d.category, d.cost]
+      );
+    }
     }
     console.log('✅ Sample dishes inserted');
 
