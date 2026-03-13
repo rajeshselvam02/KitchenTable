@@ -27,7 +27,7 @@ export default function Dashboard() {
   });
   const { data: customers } = useQuery<any[]>({
   queryKey: ["customerStats"],
-  queryFn: () => axios.get("/api/customers").then(r => r.data),
+  queryFn: () => axios.get("/api/customers").then(r => r.data.data),
   });
 
   const totalRevenue   = data?.revenue.reduce((s, r) => s + Number(r.revenue), 0) || 0;
