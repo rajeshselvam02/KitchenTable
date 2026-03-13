@@ -127,7 +127,7 @@ export default function SubscriptionsPage() {
                   </td>
                   <td style={{ padding: "14px 16px", color: text, fontSize: "13px", textTransform: "capitalize" }}>{s.meal_type}</td>
                   <td style={{ padding: "14px 16px", fontSize: "12px", color: sub }}>
-                    {s.start_date?.slice(0,10)} → {s.end_date?.slice(0,10)}
+                    
                   </td>
                   <td style={{ padding: "14px 16px", color: text, fontSize: "13px" }}>
                     {s.plan_price ? `₹${s.plan_price}` : "—"}
