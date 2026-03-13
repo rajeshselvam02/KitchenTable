@@ -103,7 +103,7 @@ export default function SubscriptionsPage() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: dark ? "#0e1015" : "#f4f5f7" }}>
-                {["#", "Customer", "Plan", "Meals", "Period", "Price", "Status"].map(h => (
+                {["#", "Customer", "Plan", "Meals", "Status"].map(h => (
                   <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "0.8px", fontWeight: 600 }}>{h}</th>
                 ))}
               </tr>
@@ -127,12 +127,7 @@ export default function SubscriptionsPage() {
                     </span>
                   </td>
                   <td style={{ padding: "14px 16px", color: text, fontSize: "13px", textTransform: "capitalize" }}>{s.meal_type}</td>
-                  <td style={{ padding: "14px 16px", fontSize: "12px", color: sub }}>
                     
-                  </td>
-                  <td style={{ padding: "14px 16px", color: text, fontSize: "13px" }}>
-                    {s.plan_price ? `₹${s.plan_price}` : "—"}
-                  </td>
                   <td style={{ padding: "14px 16px" }}>
                     <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
                       background: `${statusColor[s.status]}20`, color: statusColor[s.status] }}>
@@ -142,7 +137,7 @@ export default function SubscriptionsPage() {
                 </tr>
               ))}
               {data.data.length === 0 && (
-                <tr><td colSpan={7} style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</td></tr>
+                <tr><td colSpan={5} style={{ padding: "40px", textAlign: "center", color: sub }}>No subscriptions found.</td></tr>
               )}
             </tbody>
           </table>
