@@ -67,10 +67,21 @@ export default function DeliveriesPage() {
             style={{ padding: "8px 16px", borderRadius: "8px", background: RED, color: "#fff", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
             {genMut.isPending ? "Generating..." : "Generate"}
           </button>
-          <a href={`/api/raw-materials/export?date=${date}`} target="_blank"
-            style={{ padding: "8px 16px", borderRadius: "8px", background: "#10b981", color: "#fff", textDecoration: "none", fontSize: "13px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "6px" }}>
+          <button onClick={async () => {
+            const token = localStorage.getItem("backendToken");
+            const res = await fetch(`/api/raw-materials/export?date=${date}`, {
+              headers: { Authorization: "Bearer " + token }
+            });
+            if (res.ok) {
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url; a.download = `raw-materials-${date}.xlsx`; a.click();
+            } else { alert("Export failed: " + res.status); }
+          }}
+            style={{ padding: "8px 16px", borderRadius: "8px", background: "#10b981", color: "#fff", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
             ⬇ XLSX
-          </a>
+          </button>
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "20px" }}>
