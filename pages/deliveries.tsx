@@ -80,13 +80,13 @@ export default function DeliveriesPage() {
             } else { alert("Export failed: " + res.status); }
           }}
             style={{ padding: "8px 16px", borderRadius: "8px", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="4" fill="#217346"/>
-              <path d="M14 2H8C6.9 2 6 2.9 6 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" fill="#185C37"/>
-              <path d="M14 2v6h6" fill="none" stroke="#21A366" strokeWidth="1"/>
-              <path d="M9 13l2 3 2-3" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-              <path d="M13 13l2 3 2-3" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-              <text x="7" y="20" fontSize="6" fill="white" fontWeight="bold">XLS</text>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48">
+              <path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"/>
+              <path fill="#18482a" d="M14,15.003h15V22h-15V15.003z"/>
+              <path fill="#0c8045" d="M14,22h15v7H14V22z"/>
+              <path fill="#17472a" d="M14,29h15v7.256C29,37.219,28.219,38,27.256,38H14V29z"/>
+              <path fill="#29c27f" d="M42.256,6H29v9h13V7.744C42,6.781,41.219,6,42.256,6z M42,15h-13v7h13V15z M42,22h-13v7h13V22z M42,29h-13v9.256C29,39.219,29.781,40,30.744,40H42V29z"/>
+              <path fill="#fff" d="M21.15,19l-1.66-2.55h-0.04L17.8,19h-1.77l2.42-3.63L16.06,12h1.79l1.55,2.5h0.04L21.07,12h1.74l-2.36,3.35L23,19H21.15z"/>
             </svg>
           </button>
         </div>
