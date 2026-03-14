@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { protect } from './/../middleware/auth';
+import { protect } from '../middleware/auth';
 import { requireRoles } from '../middleware/roleGuard';
 import pool from '../db';
 
@@ -8,12 +8,10 @@ router.use(protect);
 router.use(requireRoles(['ADMIN', 'STAFF']));
 
 // GET /api/raw-materials?date=2026-03-13
-// Returns dish counts for the day grouped by meal_type
 router.get('/', async (req: Request, res: Response) => {
   try {
     const date = (req.query.date as string) || new Date().toISOString().slice(0, 10);
 
-    // Current confirmed deliveries
     const { rows: current } = await pool.query(`
       SELECT 
         d.meal_type,
@@ -29,7 +27,6 @@ router.get('/', async (req: Request, res: Response) => {
       ORDER BY d.meal_type, di.name
     `, [date]);
 
-    // Yesterday's dinner actuals (baseline for today's dinner estimate)
     const yesterday = new Date(date);
     yesterday.setDate(yesterday.getDate() - 1);
     const yDate = yesterday.toISOString().slice(0, 10);
@@ -40,7 +37,6 @@ router.get('/', async (req: Request, res: Response) => {
       WHERE delivery_date = $1 AND meal_type = 'dinner' AND status = 'delivered'
     `, [yDate]);
 
-    // Pending dinner subs not yet confirmed (for estimate)
     const { rows: pendingDinner } = await pool.query(`
       SELECT COUNT(*) as pending_dinner
       FROM deliveries
@@ -59,10 +55,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-export default router;
-
 // GET /api/raw-materials/export?date=2026-03-13
-// Export XLSX with lunch + dinner counts
 router.get('/export', async (req: Request, res: Response) => {
   try {
     const XLSX = await import('xlsx');
@@ -123,3 +116,5 @@ router.get('/export', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Export failed' });
   }
 });
+
+export default router;

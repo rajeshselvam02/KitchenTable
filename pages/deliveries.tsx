@@ -79,7 +79,7 @@ export default function DeliveriesPage() {
               a.href = url; a.download = `raw-materials-${date}.xlsx`; a.click();
             } else { alert("Export failed: " + res.status); }
           }}
-            style={{ padding: "8px 16px", borderRadius: "8px", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}>
+            style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "inline-flex", alignItems: "center" }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48">
               <path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"/>
               <path fill="#18482a" d="M14,15.003h15V22h-15V15.003z"/>

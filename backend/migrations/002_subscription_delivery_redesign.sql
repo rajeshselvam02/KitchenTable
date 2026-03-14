@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS deliveries (
   delivery_date     DATE NOT NULL,
   meal_type         TEXT NOT NULL CHECK (meal_type IN ('lunch','dinner')),
   status            TEXT NOT NULL DEFAULT 'pending'
-                    CHECK (status IN ('pending','preparing','ready','out_for_delivery','delivered','failed')),
+                    CHECK (status IN ('pending','preparing','ready','out_for_delivery','delivered','failed','skipped','auto_confirmed')),
   dish_id           INTEGER REFERENCES dishes(id),
   porter_order_id   TEXT,
   porter_status     TEXT,

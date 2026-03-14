@@ -10,7 +10,6 @@ const RED_MED  = "rgba(164,42,4,0.22)";
 const NAV = [
   { label: "Dashboard",     href: "/",               icon: "bi-grid-1x2" },
   { label: "Analytics",     href: "/analytics",      icon: "bi-bar-chart-line" },
-  { label: "Orders",        href: "/orders",         icon: "bi-list-check",   badge: "Live" },
   { label: "Deliveries",    href: "/deliveries",     icon: "bi-truck" },
   { label: "Menus",         href: "/menus",          icon: "bi-calendar-week" },
   { label: "Customers",     href: "/customers",      icon: "bi-people" },
@@ -20,7 +19,6 @@ const NAV = [
 const TITLES: Record<string, { title: string; sub: string }> = {
   "/":                { title: "Dashboard",     sub: "Overview of your kitchen operations" },
   "/analytics":       { title: "Analytics",     sub: "Revenue, prep time and waste metrics" },
-  "/orders":          { title: "Orders",        sub: "Live order management queue" },
   "/menus":           { title: "Menus",         sub: "Weekly meal planning calendar" },
   "/customers":       { title: "Customers",     sub: "Subscriber database" },
   "/deliveries":      { title: "Deliveries",    sub: "Daily delivery management" },

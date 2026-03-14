@@ -50,8 +50,8 @@ export default function Dashboard() {
   );
 
 const revSeries   = data?.revenue.map(r  => ({ day: r.day, value: Number(r.revenue) }))   ?? [];
-const prepSeries  = data?.prepTime.map(p => ({ day: p.day, value: Number(p.avgPrepSecs) })) ?? [];
-const wasteSeries = data?.waste.map(w    => ({ day: w.day, value: Number(w.wasteCost) }))  ?? [];
+const prepSeries  = data?.prepTime.map(p => ({ day: p.day, value: Number(p.delivered) })) ?? [];
+const wasteSeries = data?.waste.map(w => ({ day: w.day, value: Number(w.skip_rate) })) ?? [];
 
   return (
     <div>
@@ -90,15 +90,15 @@ const wasteSeries = data?.waste.map(w    => ({ day: w.day, value: Number(w.waste
         <div className="col-12 col-md-6">
           <div style={{ background: card, borderRadius: "8px", padding: "18px", border: `1px solid ${bdr}` }}>
             <div style={{ fontSize: "11px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "4px" }}>Avg Prep Time</div>
-            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Seconds per order</div>
-            <AnalyticsChart series={prepSeries} title="" yLabel="sec" color={RED} />
+            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Delivered per day</div>
+            <AnalyticsChart series={prepSeries} title="" yLabel="deliveries" color={RED} />
           </div>
         </div>
         <div className="col-12 col-md-6">
           <div style={{ background: card, borderRadius: "8px", padding: "18px", border: `1px solid ${bdr}` }}>
             <div style={{ fontSize: "11px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "4px" }}>Food Waste Cost</div>
-            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Daily waste in INR</div>
-            <AnalyticsChart series={wasteSeries} title="" yLabel="INR" color="#f59e0b" />
+            <div style={{ fontSize: "13px", color: text, marginBottom: "14px" }}>Daily skip rate (%)</div>
+            <AnalyticsChart series={wasteSeries} title="" yLabel="%" color="#f59e0b" />
           </div>
         </div>
       </div>

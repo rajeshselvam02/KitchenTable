@@ -27,18 +27,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_1 = require(".//../middleware/auth");
+const auth_1 = require("../middleware/auth");
 const roleGuard_1 = require("../middleware/roleGuard");
 const db_1 = __importDefault(require("../db"));
 const router = (0, express_1.Router)();
 router.use(auth_1.protect);
 router.use((0, roleGuard_1.requireRoles)(['ADMIN', 'STAFF']));
 // GET /api/raw-materials?date=2026-03-13
-// Returns dish counts for the day grouped by meal_type
 router.get('/', async (req, res) => {
     try {
         const date = req.query.date || new Date().toISOString().slice(0, 10);
-        // Current confirmed deliveries
         const { rows: current } = await db_1.default.query(`
       SELECT 
         d.meal_type,
@@ -53,7 +51,6 @@ router.get('/', async (req, res) => {
       GROUP BY d.meal_type, di.name, di.category
       ORDER BY d.meal_type, di.name
     `, [date]);
-        // Yesterday's dinner actuals (baseline for today's dinner estimate)
         const yesterday = new Date(date);
         yesterday.setDate(yesterday.getDate() - 1);
         const yDate = yesterday.toISOString().slice(0, 10);
@@ -62,7 +59,6 @@ router.get('/', async (req, res) => {
       FROM deliveries
       WHERE delivery_date = $1 AND meal_type = 'dinner' AND status = 'delivered'
     `, [yDate]);
-        // Pending dinner subs not yet confirmed (for estimate)
         const { rows: pendingDinner } = await db_1.default.query(`
       SELECT COUNT(*) as pending_dinner
       FROM deliveries
@@ -80,9 +76,7 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
-exports.default = router;
 // GET /api/raw-materials/export?date=2026-03-13
-// Export XLSX with lunch + dinner counts
 router.get('/export', async (req, res) => {
     try {
         const XLSX = await Promise.resolve().then(() => __importStar(require('xlsx')));
@@ -139,3 +133,4 @@ router.get('/export', async (req, res) => {
         res.status(500).json({ error: 'Export failed' });
     }
 });
+exports.default = router;
