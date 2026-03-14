@@ -8,6 +8,7 @@ type Sub = {
   start_date: string; end_date: string; status: string; plan_price: number;
   auto_renew: boolean; customer_name: string; customer_phone: string;
   customer_email: string; whatsapp_number: string; meals_per_sitting: number;
+  phone: string; email: string;
   discount_pct: number;
 };
 type Delivery = {
@@ -97,7 +98,7 @@ export default function SubscriptionDetail() {
         {/* Stats row */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginTop: "20px" }}>
           {[
-            { label: "Plan Price",  value: "₹" + parseFloat(subscription.plan_price).toLocaleString(), color: text },
+            { label: "Plan Price",  value: "₹" + parseFloat(String(subscription.plan_price)).toLocaleString(), color: text },
             { label: "Days Left",   value: daysLeft + " days",            color: daysLeft < 5 ? "#ef4444" : "#10b981" },
             { label: "Delivered",   value: deliveredCount,                color: "#10b981" },
             { label: "Skipped",     value: skippedCount,                  color: skippedCount > 0 ? "#f59e0b" : sub },

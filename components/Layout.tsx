@@ -8,12 +8,12 @@ const RED_SOFT = "rgba(164,42,4,0.12)";
 const RED_MED  = "rgba(164,42,4,0.22)";
 
 const NAV = [
-  { label: "Dashboard",     href: "/",               icon: "bi-grid-1x2" },
-  { label: "Analytics",     href: "/analytics",      icon: "bi-bar-chart-line" },
-  { label: "Deliveries",    href: "/deliveries",     icon: "bi-truck" },
-  { label: "Menus",         href: "/menus",          icon: "bi-calendar-week" },
-  { label: "Customers",     href: "/customers",      icon: "bi-people" },
-  { label: "Subscriptions", href: "/subscriptions",icon: "bi-arrow-repeat" },
+  { label: "Dashboard",     href: "/",               icon: "bi-grid-1x2",   badge: "" },
+  { label: "Analytics",     href: "/analytics",      icon: "bi-bar-chart-line", badge: "" },
+  { label: "Deliveries",    href: "/deliveries",     icon: "bi-truck",      badge: "" },
+  { label: "Menus",         href: "/menus",          icon: "bi-calendar-week", badge: "" },
+  { label: "Customers",     href: "/customers",      icon: "bi-people",     badge: "" },
+  { label: "Subscriptions", href: "/subscriptions",  icon: "bi-arrow-repeat", badge: "" },
 ];
 
 const TITLES: Record<string, { title: string; sub: string }> = {

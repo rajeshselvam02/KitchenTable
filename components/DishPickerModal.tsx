@@ -29,14 +29,14 @@ export const DishPickerModal: React.FC<Props> = ({ onClose, onSelect }) => {
         <ModalHeader>Select a Dish</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <RadioGroup onChange={v => setSelected(Number(v))} value={selected?.toString() ?? ''}>
+          <RadioGroup onChange={(v: any) => setSelected(Number(v))} value={selected?.toString() ?? ''}>
             <Stack direction="column">
               {dishes.map(d => (
                 <Radio key={d.id} value={d.id.toString()}>{d.name}</Radio>
               ))}
             </Stack>
           </RadioGroup>
-          <RadioGroup mt={4} onChange={v => setPortion(v as any)} value={portion}>
+          <RadioGroup mt={4} onChange={(v: any) => setPortion(v as any)} value={portion}>
             <Stack direction="row">
               <Radio value="regular">Regular</Radio>
               <Radio value="large">Large</Radio>
