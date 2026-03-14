@@ -67,6 +67,10 @@ export default function DeliveriesPage() {
             style={{ padding: "8px 16px", borderRadius: "8px", background: RED, color: "#fff", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
             {genMut.isPending ? "Generating..." : "Generate"}
           </button>
+          <a href={`/api/raw-materials/export?date=${date}`} target="_blank"
+            style={{ padding: "8px 16px", borderRadius: "8px", background: "#10b981", color: "#fff", textDecoration: "none", fontSize: "13px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "6px" }}>
+            ⬇ XLSX
+          </a>
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "20px" }}>
