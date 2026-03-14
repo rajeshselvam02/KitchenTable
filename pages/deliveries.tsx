@@ -80,7 +80,14 @@ export default function DeliveriesPage() {
             } else { alert("Export failed: " + res.status); }
           }}
             style={{ padding: "8px 16px", borderRadius: "8px", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg" style={{ width: "28px", height: "28px" }} alt="Excel" />
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="4" fill="#217346"/>
+              <path d="M14 2H8C6.9 2 6 2.9 6 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" fill="#185C37"/>
+              <path d="M14 2v6h6" fill="none" stroke="#21A366" strokeWidth="1"/>
+              <path d="M9 13l2 3 2-3" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+              <path d="M13 13l2 3 2-3" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+              <text x="7" y="20" fontSize="6" fill="white" fontWeight="bold">XLS</text>
+            </svg>
           </button>
         </div>
       </div>
