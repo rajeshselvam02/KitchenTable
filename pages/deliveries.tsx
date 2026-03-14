@@ -79,8 +79,8 @@ export default function DeliveriesPage() {
               a.href = url; a.download = `raw-materials-${date}.xlsx`; a.click();
             } else { alert("Export failed: " + res.status); }
           }}
-            style={{ padding: "8px 16px", borderRadius: "8px", background: "#10b981", color: "#fff", border: "none", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
-            ⬇ XLSX
+            style={{ padding: "8px 16px", borderRadius: "8px", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg" style={{ width: "28px", height: "28px" }} alt="Excel" />
           </button>
         </div>
       </div>
