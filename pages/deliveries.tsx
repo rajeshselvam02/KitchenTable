@@ -100,73 +100,57 @@ export default function DeliveriesPage() {
           </div>
         )}
         {filtered.length > 0 && (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: dark ? "#0e1015" : "#f4f5f7" }}>
-                {["#", "Customer", "Meal", "Dish", "Plan", "Status", "Action"].map(h => (
-                  <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: "11px", color: sub, textTransform: "uppercase", letterSpacing: "0.8px", fontWeight: 600 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(d => {
-                const sc = SC[d.status] || SC.pending;
-                return (
-                  <tr key={d.id} style={{ borderTop: "1px solid " + bdr }}
-                    onMouseEnter={e => (e.currentTarget.style.background = hover)}
-                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                    <td style={{ padding: "14px 16px", color: sub, fontSize: "13px" }}>#{d.id}</td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <div style={{ fontWeight: 600, color: text, fontSize: "14px" }}>{d.customer_name}</div>
-                      <div style={{ fontSize: "12px", color: sub }}>{d.customer_phone}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {filtered.map(d => {
+              const sc = SC[d.status] || SC.pending;
+              return (
+                <div key={d.id} style={{ padding: "14px 16px", borderRadius: "12px", background: card, border: "1px solid " + bdr }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
+                    <div>
+                      <div style={{ fontWeight: 600, color: text, fontSize: "14px" }}>{d.customer_name} <span style={{ color: sub, fontSize: "12px", fontWeight: 400 }}>#{d.id}</span></div>
+                      <div style={{ fontSize: "12px", color: sub, marginTop: "2px" }}>{d.customer_phone}</div>
                       <div style={{ fontSize: "11px", color: sub, marginTop: "2px" }}>{d.customer_address}</div>
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
-                        background: d.meal_type === "lunch" ? "rgba(245,158,11,0.15)" : "rgba(139,92,246,0.15)",
-                        color: d.meal_type === "lunch" ? "#f59e0b" : "#8b5cf6", textTransform: "capitalize" }}>
-                        {d.meal_type}
-                      </span>
-                    </td>
-                    <td style={{ padding: "14px 16px", color: text, fontSize: "13px" }}>{d.dish_name || "—"}</td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
-                        background: d.plan_type === "starter" ? "rgba(245,158,11,0.15)" : d.plan_type === "monthly" ? "rgba(16,185,129,0.15)" : "rgba(59,130,246,0.15)",
-                        color: d.plan_type === "starter" ? "#f59e0b" : d.plan_type === "monthly" ? "#10b981" : "#3b82f6" }}>
-                        {d.plan_type}
-                      </span>
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
-                        background: sc.color + "20", color: sc.color, textTransform: "capitalize" }}>
-                        {d.status.replace(/_/g, " ")}
-                      </span>
-                      {d.rider_name && <div style={{ fontSize: "11px", color: sub, marginTop: "2px" }}>Rider: {d.rider_name}</div>}
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                        {sc.next && (
-                          <button onClick={() => statusMut.mutate({ id: d.id, status: sc.next })}
-                            style={{ padding: "5px 10px", borderRadius: "6px", background: sc.color, color: "#fff", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600 }}>
-                            {sc.nextLabel}
-                          </button>
-                        )}
-                        {d.status === "ready" && !d.porter_order_id && (
-                          <button onClick={() => porterMut.mutate(d.id)}
-                            style={{ padding: "5px 10px", borderRadius: "6px", background: "#1e293b", color: "#fff", border: "none", cursor: "pointer", fontSize: "12px" }}>
-                            Porter
-                          </button>
-                        )}
-                        {d.porter_order_id && (
-                          <span style={{ fontSize: "11px", color: sub }}>Porter ID: {d.porter_order_id.slice(0, 10)}</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                    <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                      background: sc.color + "20", color: sc.color, textTransform: "capitalize", whiteSpace: "nowrap" }}>
+                      {d.status.replace(/_/g, " ")}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginBottom: "10px" }}>
+                    <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                      background: d.meal_type === "lunch" ? "rgba(245,158,11,0.15)" : "rgba(139,92,246,0.15)",
+                      color: d.meal_type === "lunch" ? "#f59e0b" : "#8b5cf6", textTransform: "capitalize" }}>
+                      {d.meal_type}
+                    </span>
+                    <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                      background: d.plan_type === "starter" ? "rgba(245,158,11,0.15)" : d.plan_type === "monthly" ? "rgba(16,185,129,0.15)" : "rgba(59,130,246,0.15)",
+                      color: d.plan_type === "starter" ? "#f59e0b" : d.plan_type === "monthly" ? "#10b981" : "#3b82f6" }}>
+                      {d.plan_type}
+                    </span>
+                    <span style={{ color: text, fontSize: "13px" }}>{d.dish_name || "—"}</span>
+                    {d.rider_name && <span style={{ fontSize: "11px", color: sub }}>Rider: {d.rider_name}</span>}
+                  </div>
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {sc.next && (
+                      <button onClick={() => statusMut.mutate({ id: d.id, status: sc.next })}
+                        style={{ padding: "6px 12px", borderRadius: "8px", background: sc.color, color: "#fff", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600 }}>
+                        {sc.nextLabel}
+                      </button>
+                    )}
+                    {d.status === "ready" && !d.porter_order_id && (
+                      <button onClick={() => porterMut.mutate(d.id)}
+                        style={{ padding: "6px 12px", borderRadius: "8px", background: "#1e293b", color: "#fff", border: "none", cursor: "pointer", fontSize: "12px" }}>
+                        Porter
+                      </button>
+                    )}
+                    {d.porter_order_id && (
+                      <span style={{ fontSize: "11px", color: sub }}>Porter ID: {d.porter_order_id.slice(0, 10)}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
