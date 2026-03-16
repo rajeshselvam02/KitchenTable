@@ -30,7 +30,12 @@ async function notifyAdmin(msg: string) {
 }
 
 function normalizePhone(phone: string): string {
-  return phone.replace(/\s+/g, '');
+  let p = phone.replace(/\s+/g, '');
+  // Ensure whatsapp: prefix has + after it
+  if (p.startsWith('whatsapp:') && !p.startsWith('whatsapp:+')) {
+    p = p.replace('whatsapp:', 'whatsapp:+');
+  }
+  return p;
 }
 
 async function getSession(phone: string) {
@@ -178,6 +183,20 @@ async function handleMessage(phone: string, message: string): Promise<string> {
 
     case 'main_menu': {
       if (msg === '1') {
+        // Check for existing active subscription
+        const waNumber = phone.replace('whatsapp:', '').replace(/\s+/g,'').replace(/^\+/, '').replace(/^/, '+');
+        console.log('[DUPCHECK] waNumber:', waNumber);
+        const { rows: activeSubs } = await pool.query(
+          `SELECT s.id FROM subscriptions s
+           JOIN customers c ON c.id = s.customer_id
+           WHERE (c.whatsapp_number = $1 OR c.whatsapp_number = $2 OR c.phone = $1 OR c.phone = $2)
+             AND s.status = 'active'`,
+          [waNumber, waNumber.replace('+','')]
+        );
+        console.log('[DUPCHECK] activeSubs:', activeSubs.length);
+        if (activeSubs.length > 0) {
+          return `You already have an active subscription!\n\nReply 2 to view your orders or 3 to skip today.\n\n` + getMainMenu();
+        }
         await updateSession(phone, 'get_name', data);
         return `Great! Let us set up your subscription.\n\nWhat is your full name?`;
       }
@@ -262,14 +281,29 @@ async function handleMessage(phone: string, message: string): Promise<string> {
       const startDate = new Date().toISOString().slice(0, 10);
       const endDate = new Date(Date.now() + plan.days * 86400000).toISOString().slice(0, 10);
 
-      const { rows: custRows } = await pool.query(`
-        INSERT INTO customers (name, phone, whatsapp_number, address)
-        VALUES ($1, $2, $3, $4)
-        ON CONFLICT (phone) DO UPDATE SET name = $1, address = $4, updated_at = NOW()
-        RETURNING id
-      `, [data.name, data.phone, phone.replace('whatsapp:', '').replace(/\s+/g,''), data.address]);
+      const waNumber = phone.replace('whatsapp:', '').replace(/\s+/g,'').replace(/^\+/, '').replace(/^/, '+');
+      const { rows: existingCust } = await pool.query(
+        `SELECT id FROM customers WHERE whatsapp_number = $1 OR phone = $2`,
+        [waNumber, data.phone]
+      );
+      let customerId: number;
+      if (existingCust.length > 0) {
+        customerId = existingCust[0].id;
+        await pool.query(
+          `UPDATE customers SET name = $1, address = $2, updated_at = NOW() WHERE id = $3`,
+          [data.name, data.address, customerId]
+        );
+      } else {
+        const { rows: newCust } = await pool.query(`
+          INSERT INTO customers (name, phone, whatsapp_number, address)
+          VALUES ($1, $2, $3, $4)
+          RETURNING id
+        `, [data.name, data.phone, waNumber, data.address]);
+        customerId = newCust[0].id;
+      }
 
-      const customerId = custRows[0].id;
+
+      // customerId already set above
 
       const { rows: subRows } = await pool.query(`
         INSERT INTO subscriptions (customer_id, plan_type, meal_type, start_date, end_date, status, plan_price, whatsapp_number)

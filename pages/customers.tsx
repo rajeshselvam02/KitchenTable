@@ -39,7 +39,7 @@ export default function Customers() {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ background: hdr }}>
-                  {["#", "Name", "Email", "Phone", "Address"].map(h => (
+                  {["#", "Name", "Email", "Phone", "Address", "Chat"].map(h => (
                     <th key={h} style={{ padding: "10px 14px", fontSize: "10px", fontWeight: 700, color: sub, textTransform: "uppercase", letterSpacing: "1.2px", textAlign: "left" }}>{h}</th>
                   ))}
                 </tr>
@@ -60,6 +60,19 @@ export default function Customers() {
                     <td style={{ padding: "11px 14px", fontSize: "13px", color: sub }}>{c.email}</td>
                     <td style={{ padding: "11px 14px", fontSize: "13px", color: text }}>{c.phone || "—"}</td>
                     <td style={{ padding: "11px 14px", fontSize: "13px", color: text }}>{c.address || "—"}</td>
+                  <td style={{ padding: "11px 14px" }}>
+                    {c.phone && (
+                      <a
+                        href={`https://wa.me/${c.phone.replace(/[^0-9]/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`Chat with ${c.name}`}
+                        style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "30px", height: "30px", borderRadius: "6px", background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.3)", textDecoration: "none" }}
+                      >
+                        <i className="bi bi-whatsapp" style={{ fontSize: "14px", color: "#25d166" }}></i>
+                      </a>
+                    )}
+                  </td>
                   </tr>
                 ))}
               </tbody>
