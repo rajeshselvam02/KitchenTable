@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import rawMaterialsRouter from './routes/rawMaterials';
 import { startScheduler } from './services/scheduler';
@@ -25,6 +28,7 @@ const allowedOrigins = process.env.FRONTEND_URL
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(helmet());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(expressPino({ logger } as any));
 // Health check
 app.get('/health', (_req, res) => {
