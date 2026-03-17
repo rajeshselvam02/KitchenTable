@@ -360,7 +360,7 @@ router.get('/payment/confirm', async (req: Request, res: Response) => {
 
     const { rows: already } = await pool.query(`SELECT status FROM subscriptions WHERE id = $1`, [subId]);
     if (already[0]?.status === 'active') {
-      return res.send('<html><body style="font-family:sans-serif;text-align:center;padding:40px;background:#0f1117;color:white"><h2 style="color:#A42A04">Already Activated!</h2><p>Your subscription is already active.</p></body></html>');
+      return res.send('<html><body style="font-family:sans-serif;text-align:center;padding:40px;background:#0f1117;color:white"><h2 style="color:#10b981">Already Active!</h2><p>Your KitchenTable subscription is already active.</p><p>Thank you for choosing KitchenTable!</p></body></html>');
     }
     await pool.query(`UPDATE subscriptions SET status = 'active' WHERE id = $1`, [subId]);
 

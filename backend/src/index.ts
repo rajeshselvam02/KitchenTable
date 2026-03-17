@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import './telegram';
 import rawMaterialsRouter from './routes/rawMaterials';
 import { startScheduler } from './services/scheduler';
 import cors from 'cors';
